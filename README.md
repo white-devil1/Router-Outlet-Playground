@@ -7,13 +7,12 @@
 [![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io/)
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
 
 <br>
 
 **Router Outlet Playground** is a visually interactive educational application designed to demystify the Angular Router. Unlike static tutorials, this project provides a live "Playground" where users can see exactly how URLs, Router Outlets (Primary & Named), and Component lifecycles interact in real-time.
 
-[**View Live Demo**](https://your-project.web.app) · [**Report Bug**](https://github.com/your-username/router-outlet-playground/issues) · [**Request Feature**](https://github.com/your-username/router-outlet-playground/issues)
+[**View Live Demo**](https://your-project.web.app)
 
 </div>
 
@@ -56,7 +55,6 @@ This project is built using modern **Angular (v18+)** standards:
 *   **Zoneless Ready**: Prepared for the future of Angular change detection.
 *   **Signals**: State management relies entirely on Angular Signals for reactivity (no complex RxJS Subject patterns for local state).
 *   **Tailwind CSS**: Utility-first styling with Glassmorphism effects and responsive design.
-*   **Firebase Hosting**: configured for SPA routing (rewrites to `index.html`).
 
 ### Project Structure
 ```bash
@@ -100,32 +98,6 @@ src/
 
 ---
 
-## 🔥 How to Deploy to Firebase
-
-This project includes a production-ready `firebase.json` configuration.
-
-1.  **Install Firebase Tools** (if not installed)
-    ```bash
-    npm install -g firebase-tools
-    ```
-
-2.  **Login to Firebase**
-    ```bash
-    firebase login
-    ```
-
-3.  **Build the Project**
-    ```bash
-    ng build
-    ```
-
-4.  **Deploy**
-    ```bash
-    firebase deploy
-    ```
-
----
-
 ## 📚 Curriculum Overview
 
 | Level | Concepts Covered |
@@ -134,16 +106,6 @@ This project includes a production-ready `firebase.json` configuration.
 | **Intermediate** | Route Params (`:id`), Wildcards (`**`), Active Routing classes, Auxiliary Routes setup. |
 | **Advanced** | Route Guards (`CanActivate`), Resolvers, Lazy Loading syntax, Relative navigation. |
 | **Professional** | `UrlTree` serialization, `RouteReuseStrategy`, `PreloadingStrategy`, `ViewContainerRef` internals. |
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you have a new lesson idea, a better explanation, or a new language translation:
-
-1.  Fork the repository.
-2.  Create a feature branch.
-3.  Submit a Pull Request.
 
 ---
 

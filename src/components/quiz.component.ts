@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { QuizService } from '../services/quiz.service';
+import { QuizService, QuizQuestion } from '../services/quiz.service';
 import { TutorialService } from '../services/tutorial.service';
 
 @Component({
@@ -51,11 +51,7 @@ import { TutorialService } from '../services/tutorial.service';
                </div>
                
                <h3 class="text-xl md:text-2xl font-bold text-slate-800 leading-snug">
-                 @if(q.type === 'fill-blank') {
-                   {{ q.question.replace('[?]', '____') }}
-                 } @else {
-                   {{ q.question }}
-                 }
+                 {{ formatQuestionText(q) }}
                </h3>
                
                @if(q.codeContext) {
@@ -197,6 +193,14 @@ export class QuizComponent implements OnInit {
   ngOnInit() {
     // Automatically start quiz for the currently selected tutorial level
     this.retry();
+  }
+
+  // Safe helper to format text
+  formatQuestionText(q: QuizQuestion): string {
+    if (q.type === 'fill-blank' && q.question) {
+      return q.question.replace('[?]', '____');
+    }
+    return q.question;
   }
 
   submit(answer: string) {
