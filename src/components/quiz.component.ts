@@ -1,7 +1,9 @@
-import { Component, inject, signal, effect, ElementRef, viewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QuizService, Level } from '../services/quiz.service';
+import { Router } from '@angular/router';
+import { QuizService } from '../services/quiz.service';
+import { TutorialService } from '../services/tutorial.service';
 
 @Component({
   selector: 'app-quiz',
@@ -18,6 +20,9 @@ import { QuizService, Level } from '../services/quiz.service';
       <div class="relative z-10 bg-white border-b border-gray-200 p-4 flex justify-between items-center shadow-sm">
         <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
           <span>🧠</span> Routing Quiz
+          <span class="px-2 py-1 rounded bg-slate-100 text-slate-500 text-xs font-normal uppercase tracking-wider">
+            {{ tutorial.currentLevel() }}
+          </span>
         </h2>
         @if(quiz.quizState() === 'active') {
           <div class="flex items-center gap-4">
@@ -32,33 +37,6 @@ import { QuizService, Level } from '../services/quiz.service';
       <!-- MAIN CONTENT AREA -->
       <div class="flex-1 overflow-y-auto p-6 relative z-10 flex flex-col items-center justify-center">
         
-        <!-- STATE: INTRO -->
-        @if(quiz.quizState() === 'intro') {
-          <div class="max-w-4xl w-full text-center animate-fade-in">
-             <div class="text-6xl mb-6">🎓</div>
-             <h1 class="text-3xl font-bold text-slate-900 mb-4">Ready to test your knowledge?</h1>
-             <p class="text-slate-600 mb-10">Select your difficulty level. Pass the exam to earn your badge.</p>
-             
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-               @for(lvl of levels; track lvl) {
-                 <button (click)="quiz.startQuiz(lvl)" 
-                         class="p-6 rounded-xl border-2 transition-all hover:-translate-y-1 hover:shadow-lg text-left group bg-white"
-                         [class.border-green-200]="lvl === 'beginner'" 
-                         [class.border-blue-200]="lvl === 'intermediate'"
-                         [class.border-purple-200]="lvl === 'advanced'" 
-                         [class.border-orange-200]="lvl === 'professional'">
-                    <div class="text-sm font-bold uppercase tracking-wider mb-2 opacity-60">{{lvl}}</div>
-                    <div class="text-lg font-bold flex justify-between items-center text-slate-800">
-                      Start Exam 
-                      <span class="transform group-hover:translate-x-2 transition-transform text-indigo-500">→</span>
-                    </div>
-                    <div class="text-xs text-slate-400 mt-2 font-mono">~100 Questions</div>
-                 </button>
-               }
-             </div>
-          </div>
-        }
-
         <!-- STATE: ACTIVE QUESTION -->
         @if(quiz.quizState() === 'active' && quiz.currentQuestion(); as q) {
           <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col animate-slide-up">
@@ -190,8 +168,8 @@ import { QuizService, Level } from '../services/quiz.service';
              <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">Final Score</div>
 
              <div class="flex gap-3 justify-center">
-               <button (click)="quiz.restart()" class="px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200">Menu</button>
-               <button (click)="quiz.startQuiz(quiz.currentLevel())" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md hover:shadow-lg">Retry</button>
+               <button (click)="goHome()" class="px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200">Exit</button>
+               <button (click)="retry()" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md hover:shadow-lg">Retry</button>
              </div>
           </div>
         }
@@ -200,26 +178,37 @@ import { QuizService, Level } from '../services/quiz.service';
     </div>
   `,
   styles: [`
-    .animate-fade-in { animation: fadeIn 0.5s ease-out; }
     .animate-slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     
-    /* Simple CSS Confetti Fall */
     @keyframes confettiFall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(400px) rotate(360deg); opacity: 0; } }
     .animate-confetti-1 { animation: confettiFall 2s linear infinite; }
     .animate-confetti-2 { animation: confettiFall 2.5s linear infinite 0.5s; }
     .animate-confetti-3 { animation: confettiFall 1.8s linear infinite 1s; }
   `]
 })
-export class QuizComponent {
+export class QuizComponent implements OnInit {
   quiz = inject(QuizService);
-  levels: Level[] = ['beginner', 'intermediate', 'advanced', 'professional'];
+  tutorial = inject(TutorialService);
+  router = inject(Router);
+
+  ngOnInit() {
+    // Automatically start quiz for the currently selected tutorial level
+    this.retry();
+  }
 
   submit(answer: string) {
     if (!answer) return;
     this.quiz.submitAnswer(answer);
+  }
+
+  retry() {
+    this.quiz.startQuiz(this.tutorial.currentLevel());
+  }
+
+  goHome() {
+    this.router.navigate(['/home']);
   }
 }
