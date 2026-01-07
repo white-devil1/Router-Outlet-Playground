@@ -10,6 +10,10 @@ import { HomePageComponent, DashboardPageComponent, SettingsPageComponent, UserP
 // 2. Side Components
 import { MenuSidebarComponent, HelpSidebarComponent, AdsSidebarComponent, NotesSidebarComponent } from './src/components/side-components';
 
+// 3. New Modules
+import { QuizComponent } from './src/components/quiz.component';
+import { InterviewComponent } from './src/components/interview.component';
+
 const routes: Routes = [
   // REDIRECT: If path is empty, go to 'home'
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,6 +23,10 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardPageComponent, title: 'Dashboard' },
   { path: 'settings', component: SettingsPageComponent, title: 'Settings' },
   { path: 'user/:id', component: UserPageComponent, title: 'User Profile' },
+  
+  // NEW EXAM ROUTES
+  { path: 'quiz', component: QuizComponent, title: 'Exam' },
+  { path: 'interview', component: InterviewComponent, title: 'Interview Questions' },
 
   // LEFT OUTLET ROUTES
   { path: 'menu', component: MenuSidebarComponent, outlet: 'left' },

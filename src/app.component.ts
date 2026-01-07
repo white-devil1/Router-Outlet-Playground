@@ -26,7 +26,7 @@ export class AppComponent {
   tutorial = inject(TutorialService);
   speech = inject(SpeechService);
   langService = inject(LanguageService);
-  private router = inject(Router);
+  router = inject(Router);
 
   // App State
   showLandingPage = signal(true);
