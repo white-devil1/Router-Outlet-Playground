@@ -33,6 +33,7 @@ export class AppComponent {
   currentUrlStr = signal('/');
   showCode = signal(false);
   isSpeaking = this.speech.isSpeaking;
+  isSidebarOpen = signal(false); // Mobile sidebar state
 
   // React to lesson changes to stop speech
   constructor() {
@@ -40,6 +41,8 @@ export class AppComponent {
       filter(e => e instanceof NavigationEnd)
     ).subscribe((e: any) => {
       this.currentUrlStr.set(e.urlAfterRedirects);
+      // Close sidebar on mobile navigation
+      this.isSidebarOpen.set(false);
     });
     
     // Auto-stop speech when changing lessons
@@ -58,6 +61,10 @@ export class AppComponent {
   goBack() {
     this.speech.stop();
     this.showLandingPage.set(true);
+  }
+
+  toggleSidebar() {
+    this.isSidebarOpen.update(v => !v);
   }
 
   toggleCode() {

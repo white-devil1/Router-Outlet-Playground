@@ -89,8 +89,9 @@ export class LandingPageComponent {
   ts = inject(TutorialService);
   start = output<void>();
 
-  selectedLang = signal<LangCode>('en');
-  selectedLevel = signal<Level>('beginner');
+  // Initialize signals with values from services to persist choice on back navigation
+  selectedLang = signal<LangCode>(this.ls.currentLang());
+  selectedLevel = signal<Level>(this.ts.currentLevel());
 
   languages: {code: LangCode, name: string, flag: string}[] = [
     { code: 'en', name: 'English', flag: '🇬🇧' },

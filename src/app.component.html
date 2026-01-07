@@ -3,8 +3,16 @@
 } @else {
   <div class="flex h-screen overflow-hidden font-sans bg-gray-50 text-slate-800">
     
-    <!-- === LEFT SIDEBAR === -->
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-xl z-20 shrink-0">
+    <!-- === MOBILE BACKDROP === -->
+    @if(isSidebarOpen()) {
+      <div class="fixed inset-0 bg-black/50 z-40 md:hidden animate-fade-in" (click)="toggleSidebar()"></div>
+    }
+
+    <!-- === SIDEBAR === -->
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col shadow-xl transform transition-transform duration-300 md:relative md:translate-x-0"
+           [class.-translate-x-full]="!isSidebarOpen()"
+           [class.translate-x-0]="isSidebarOpen()">
+      
       <!-- Sidebar Header -->
       <div class="p-4 bg-slate-900 text-white flex flex-col gap-2">
          <div class="flex justify-between items-start">
@@ -15,6 +23,8 @@
                 <p class="text-[10px] text-indigo-300">{{ tutorial.currentLevel() | titlecase }} Level</p>
               </div>
            </div>
+           <!-- Mobile Close Button -->
+           <button class="md:hidden text-gray-400 hover:text-white" (click)="toggleSidebar()">✕</button>
          </div>
          
          <button (click)="goBack()" class="mt-2 w-full py-1.5 px-3 bg-white/10 hover:bg-white/20 rounded text-xs text-center border border-white/10 transition-colors flex items-center justify-center gap-2">
@@ -73,11 +83,16 @@
     <!-- === MAIN AREA === -->
     <main class="flex-1 flex flex-col min-w-0 bg-slate-100 relative">
       
-      <!-- 1. TEACHER'S DESK (Header) - Only show if NOT on quiz/interview pages (optional, but cleaner) -->
+      <!-- 1. TEACHER'S DESK (Header) -->
       @if(!router.url.includes('quiz') && !router.url.includes('interview')) {
-        <div class="bg-white border-b border-gray-200 p-6 shadow-sm z-10 relative">
-          <div class="max-w-5xl mx-auto flex gap-6 items-start">
+        <div class="bg-white border-b border-gray-200 p-4 md:p-6 shadow-sm z-10 relative">
+          <div class="max-w-5xl mx-auto flex gap-4 md:gap-6 items-start">
             
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden mt-1 p-2 text-gray-600 bg-gray-100 rounded-lg" (click)="toggleSidebar()">
+              ☰
+            </button>
+
             <!-- Teacher Avatar -->
             <div class="hidden md:flex flex-col items-center gap-1">
               <div class="w-16 h-16 rounded-full bg-indigo-100 border-2 border-indigo-200 flex items-center justify-center text-3xl shadow-inner">
@@ -88,12 +103,14 @@
             </div>
 
             <!-- Content -->
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div class="flex justify-between items-start mb-2">
-                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                  {{ tutorial.currentStep().title }}
-                  <span class="text-xs font-normal text-white bg-indigo-500 px-2 py-0.5 rounded-full">Part {{tutorial.currentStep().id}}</span>
-                </h2>
+                <div class="flex flex-col">
+                  <span class="text-xs font-normal text-white bg-indigo-500 px-2 py-0.5 rounded-full w-fit mb-1">Part {{tutorial.currentStep().id}}</span>
+                  <h2 class="text-lg md:text-xl font-bold text-slate-800 leading-tight">
+                    {{ tutorial.currentStep().title }}
+                  </h2>
+                </div>
                 
                 <!-- Action Buttons -->
                 <div class="flex gap-2">
@@ -106,8 +123,8 @@
                   <button (click)="toggleCode()" 
                           [class.bg-yellow-100]="showCode()"
                           [class.text-yellow-700]="showCode()"
-                          class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-bold flex items-center gap-2 hover:bg-gray-50 transition-colors">
-                    <span>{{ '{ }' }}</span> Code
+                          class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-bold flex items-center gap-2 hover:bg-gray-50 transition-colors whitespace-nowrap">
+                    <span>{{ '{ }' }}</span> <span class="hidden sm:inline">Code</span>
                   </button>
                 </div>
               </div>
@@ -119,7 +136,7 @@
               <div class="flex gap-3 mt-4">
                 <button (click)="tutorial.prev()" [disabled]="tutorial.isFirst()" class="px-4 py-2 text-xs font-bold border border-gray-300 bg-white rounded hover:bg-gray-50 disabled:opacity-50 transition-all">Previous</button>
                 <button (click)="tutorial.next()" [disabled]="tutorial.isLast()" class="px-6 py-2 text-xs font-bold bg-indigo-600 text-white rounded hover:bg-indigo-700 shadow-md disabled:opacity-50 transition-all flex items-center gap-2">
-                  Next Lesson <span>→</span>
+                  Next <span class="hidden sm:inline">Lesson</span> <span>→</span>
                 </button>
               </div>
             </div>
@@ -145,8 +162,9 @@
             [class.ring-indigo-300]="tutorial.currentStep().focusArea === 'url' || tutorial.currentStep().focusArea === 'wildcard'"
             [class.z-20]="tutorial.currentStep().focusArea === 'url' || tutorial.currentStep().focusArea === 'wildcard'">
           <div class="max-w-5xl mx-auto flex items-center gap-3">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Browser URL:</span>
-            <div class="flex-1 bg-slate-100 border border-gray-200 rounded p-1.5 flex gap-1.5 font-mono text-sm items-center h-10 overflow-x-auto shadow-inner">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 hidden sm:inline">Browser URL:</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 sm:hidden">URL:</span>
+            <div class="flex-1 bg-slate-100 border border-gray-200 rounded p-1.5 flex gap-1.5 font-mono text-sm items-center h-10 overflow-x-auto shadow-inner whitespace-nowrap">
               <span class="text-gray-400 px-2 select-none">my-app/ # /</span>
               
               @if(parsedUrl().primary) {
@@ -158,11 +176,11 @@
               }
 
               @if(parsedUrl().left) {
-                <span class="px-3 py-0.5 bg-green-500 text-white rounded shadow-sm font-bold text-xs animate-pop-in">(left: {{ parsedUrl().left }})</span>
+                <span class="px-3 py-0.5 bg-green-500 text-white rounded shadow-sm font-bold text-xs animate-pop-in">L:{{ parsedUrl().left }}</span>
               }
               
               @if(parsedUrl().right) {
-                <span class="px-3 py-0.5 bg-red-500 text-white rounded shadow-sm font-bold text-xs animate-pop-in">(right: {{ parsedUrl().right }})</span>
+                <span class="px-3 py-0.5 bg-red-500 text-white rounded shadow-sm font-bold text-xs animate-pop-in">R:{{ parsedUrl().right }}</span>
               }
             </div>
           </div>
@@ -174,51 +192,29 @@
         @if(router.url.includes('quiz') || router.url.includes('interview')) {
            <router-outlet></router-outlet>
         } @else {
-          <div class="p-6">
-            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 pb-20">
+          <div class="p-4 md:p-6">
+            <!-- Modified Grid: Order classes ensure Primary comes first on mobile -->
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 pb-24">
               
-              <!-- LEFT OUTLET -->
-              <div class="md:col-span-3 flex flex-col transition-all duration-500" 
-                  [class.opacity-30]="shouldDim('left') && shouldDim('url')"
-                  [class.blur-sm]="shouldDim('left') && shouldDim('url')">
-                
-                <div class="flex justify-between items-center mb-2 px-1">
-                  <span class="text-[10px] font-bold text-green-700 uppercase bg-green-100 px-2 py-0.5 rounded border border-green-200">name="left"</span>
-                  <div class="flex gap-1">
-                    <a [routerLink]="[{ outlets: { left: 'menu' } }]" routerLinkActive="ring-2 ring-green-500" class="w-7 h-7 flex items-center justify-center bg-white border border-green-300 rounded text-xl shadow-sm hover:scale-110 transition-transform cursor-pointer" title="Menu">🍔</a>
-                    <a [routerLink]="[{ outlets: { left: 'ads' } }]" routerLinkActive="ring-2 ring-green-500" class="w-7 h-7 flex items-center justify-center bg-white border border-green-300 rounded text-xl shadow-sm hover:scale-110 transition-transform cursor-pointer" title="Ads">📢</a>
-                    <a [routerLink]="[{ outlets: { left: null } }]" class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded text-gray-500 text-xs hover:bg-red-500 hover:text-white cursor-pointer" title="Close">✕</a>
-                  </div>
-                </div>
-                <div class="flex-1 bg-white border-2 border-dashed border-green-300 rounded-xl p-3 relative min-h-[200px] shadow-sm group transition-all duration-500"
-                    [class.scale-105]="tutorial.currentStep().focusArea === 'left'"
-                    [class.shadow-xl]="tutorial.currentStep().focusArea === 'left'"
-                    [class.ring-4]="tutorial.currentStep().focusArea === 'left'"
-                    [class.ring-green-200]="tutorial.currentStep().focusArea === 'left'">
-                  <router-outlet name="left"></router-outlet>
-                  <div class="absolute inset-0 flex items-center justify-center text-green-50 text-4xl font-black -z-0 pointer-events-none group-hover:text-green-100 transition-colors">LEFT</div>
-                </div>
-              </div>
-
-              <!-- PRIMARY OUTLET -->
-              <div class="md:col-span-6 flex flex-col transition-all duration-500"
+              <!-- PRIMARY OUTLET (Mobile Order: 1, Desktop Order: 2) -->
+              <div class="order-1 md:order-2 md:col-span-6 flex flex-col transition-all duration-500"
                   [class.opacity-30]="shouldDim('primary') && shouldDim('params') && shouldDim('active') && shouldDim('wildcard') && shouldDim('url')"
                   [class.blur-sm]="shouldDim('primary') && shouldDim('params') && shouldDim('active') && shouldDim('wildcard') && shouldDim('url')">
                 
                 <div class="flex justify-between items-center mb-2 px-1">
-                  <span class="text-[10px] font-bold text-blue-700 uppercase bg-blue-100 px-2 py-0.5 rounded border border-blue-200">Primary (Default)</span>
+                  <span class="text-[10px] font-bold text-blue-700 uppercase bg-blue-100 px-2 py-0.5 rounded border border-blue-200">Primary</span>
                   <div class="flex gap-2 transition-all duration-500"
                       [class.scale-110]="tutorial.currentStep().focusArea === 'active'"
                       [class.ring-4]="tutorial.currentStep().focusArea === 'active'"
                       [class.ring-yellow-300]="tutorial.currentStep().focusArea === 'active'"
                       [class.rounded-full]="tutorial.currentStep().focusArea === 'active'">
-                    <a routerLink="/home" routerLinkActive="bg-blue-600 text-white border-blue-600 shadow-md scale-105" class="px-4 py-1 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 transition-all cursor-pointer">Home</a>
-                    <a routerLink="/dashboard" routerLinkActive="bg-indigo-600 text-white border-indigo-600 shadow-md scale-105" class="px-4 py-1 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 transition-all cursor-pointer">Dashboard</a>
-                    <a routerLink="/settings" routerLinkActive="bg-purple-600 text-white border-purple-600 shadow-md scale-105" class="px-4 py-1 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 transition-all cursor-pointer">Settings</a>
+                    <a routerLink="/home" routerLinkActive="bg-blue-600 text-white border-blue-600 shadow-md scale-105" class="px-3 py-1 bg-white border border-gray-300 rounded-full text-[10px] md:text-xs font-bold text-gray-600 transition-all cursor-pointer">Home</a>
+                    <a routerLink="/dashboard" routerLinkActive="bg-indigo-600 text-white border-indigo-600 shadow-md scale-105" class="px-3 py-1 bg-white border border-gray-300 rounded-full text-[10px] md:text-xs font-bold text-gray-600 transition-all cursor-pointer">Dash</a>
+                    <a routerLink="/settings" routerLinkActive="bg-purple-600 text-white border-purple-600 shadow-md scale-105" class="px-3 py-1 bg-white border border-gray-300 rounded-full text-[10px] md:text-xs font-bold text-gray-600 transition-all cursor-pointer">Set</a>
                   </div>
                 </div>
 
-                <div class="bg-white border-2 border-dashed border-blue-300 rounded-xl p-6 relative min-h-[350px] shadow-lg flex flex-col justify-between z-10 transition-all duration-500"
+                <div class="bg-white border-2 border-dashed border-blue-300 rounded-xl p-4 md:p-6 relative min-h-[300px] shadow-lg flex flex-col justify-between z-10 transition-all duration-500"
                     [class.scale-105]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'"
                     [class.shadow-2xl]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'"
                     [class.ring-4]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'"
@@ -231,12 +227,12 @@
                   <!-- Simulator Controls -->
                   <div class="mt-8 pt-4 border-t border-gray-100">
                     <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center mb-2">Simulation Tools</div>
-                    <div class="flex justify-center gap-6">
+                    <div class="flex flex-wrap justify-center gap-4">
                       <div class="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded border border-gray-200 transition-all duration-500"
                             [class.ring-4]="tutorial.currentStep().focusArea === 'params'"
                             [class.ring-fuchsia-300]="tutorial.currentStep().focusArea === 'params'"
                             [class.scale-110]="tutorial.currentStep().focusArea === 'params'">
-                        <span class="text-[10px] font-bold text-gray-500">USER ID:</span>
+                        <span class="text-[10px] font-bold text-gray-500">ID:</span>
                         <a routerLink="/user/1" routerLinkActive="bg-fuchsia-500 text-white border-transparent" class="w-6 h-6 flex items-center justify-center rounded border border-gray-300 text-[10px] font-bold hover:border-fuchsia-400 cursor-pointer">1</a>
                         <a routerLink="/user/99" routerLinkActive="bg-fuchsia-500 text-white border-transparent" class="w-6 h-6 flex items-center justify-center rounded border border-gray-300 text-[10px] font-bold hover:border-fuchsia-400 cursor-pointer">99</a>
                       </div>
@@ -244,8 +240,8 @@
                             [class.ring-4]="tutorial.currentStep().focusArea === 'wildcard'"
                             [class.ring-red-300]="tutorial.currentStep().focusArea === 'wildcard'"
                             [class.scale-110]="tutorial.currentStep().focusArea === 'wildcard'">
-                        <span class="text-[10px] font-bold text-red-400">TEST 404:</span>
-                        <a routerLink="/bad-url" class="px-2 py-0.5 bg-white border border-red-200 rounded text-[10px] text-red-600 font-bold hover:bg-red-600 hover:text-white cursor-pointer">Broken Link</a>
+                        <span class="text-[10px] font-bold text-red-400">404:</span>
+                        <a routerLink="/bad-url" class="px-2 py-0.5 bg-white border border-red-200 rounded text-[10px] text-red-600 font-bold hover:bg-red-600 hover:text-white cursor-pointer">Broken</a>
                       </div>
                     </div>
                   </div>
@@ -254,9 +250,32 @@
                   <div class="absolute inset-0 flex items-center justify-center text-blue-50 text-6xl font-black -z-0 pointer-events-none select-none">PRIMARY</div>
                 </div>
               </div>
+              
+              <!-- LEFT OUTLET (Mobile Order: 2, Desktop Order: 1) -->
+              <div class="order-2 md:order-1 md:col-span-3 flex flex-col transition-all duration-500" 
+                  [class.opacity-30]="shouldDim('left') && shouldDim('url')"
+                  [class.blur-sm]="shouldDim('left') && shouldDim('url')">
+                
+                <div class="flex justify-between items-center mb-2 px-1">
+                  <span class="text-[10px] font-bold text-green-700 uppercase bg-green-100 px-2 py-0.5 rounded border border-green-200">name="left"</span>
+                  <div class="flex gap-1">
+                    <a [routerLink]="[{ outlets: { left: 'menu' } }]" routerLinkActive="ring-2 ring-green-500" class="w-7 h-7 flex items-center justify-center bg-white border border-green-300 rounded text-xl shadow-sm hover:scale-110 transition-transform cursor-pointer" title="Menu">🍔</a>
+                    <a [routerLink]="[{ outlets: { left: 'ads' } }]" routerLinkActive="ring-2 ring-green-500" class="w-7 h-7 flex items-center justify-center bg-white border border-green-300 rounded text-xl shadow-sm hover:scale-110 transition-transform cursor-pointer" title="Ads">📢</a>
+                    <a [routerLink]="[{ outlets: { left: null } }]" class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded text-gray-500 text-xs hover:bg-red-500 hover:text-white cursor-pointer" title="Close">✕</a>
+                  </div>
+                </div>
+                <div class="flex-1 bg-white border-2 border-dashed border-green-300 rounded-xl p-3 relative min-h-[150px] shadow-sm group transition-all duration-500"
+                    [class.scale-105]="tutorial.currentStep().focusArea === 'left'"
+                    [class.shadow-xl]="tutorial.currentStep().focusArea === 'left'"
+                    [class.ring-4]="tutorial.currentStep().focusArea === 'left'"
+                    [class.ring-green-200]="tutorial.currentStep().focusArea === 'left'">
+                  <router-outlet name="left"></router-outlet>
+                  <div class="absolute inset-0 flex items-center justify-center text-green-50 text-4xl font-black -z-0 pointer-events-none group-hover:text-green-100 transition-colors">LEFT</div>
+                </div>
+              </div>
 
-              <!-- RIGHT OUTLET -->
-              <div class="md:col-span-3 flex flex-col transition-all duration-500"
+              <!-- RIGHT OUTLET (Mobile Order: 3, Desktop Order: 3) -->
+              <div class="order-3 md:order-3 md:col-span-3 flex flex-col transition-all duration-500"
                   [class.opacity-30]="shouldDim('right') && shouldDim('url')"
                   [class.blur-sm]="shouldDim('right') && shouldDim('url')">
                 
@@ -268,7 +287,7 @@
                     <a [routerLink]="[{ outlets: { right: null } }]" class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded text-gray-500 text-xs hover:bg-red-500 hover:text-white cursor-pointer" title="Close">✕</a>
                   </div>
                 </div>
-                <div class="flex-1 bg-white border-2 border-dashed border-red-300 rounded-xl p-3 relative min-h-[200px] shadow-sm group transition-all duration-500"
+                <div class="flex-1 bg-white border-2 border-dashed border-red-300 rounded-xl p-3 relative min-h-[150px] shadow-sm group transition-all duration-500"
                     [class.scale-105]="tutorial.currentStep().focusArea === 'right'"
                     [class.shadow-xl]="tutorial.currentStep().focusArea === 'right'"
                     [class.ring-4]="tutorial.currentStep().focusArea === 'right'"
@@ -285,13 +304,13 @@
       
       <!-- FOOTER PRESETS -->
       @if(!router.url.includes('quiz') && !router.url.includes('interview')) {
-        <div class="fixed bottom-0 left-64 right-0 bg-white border-t border-gray-200 p-3 z-30 flex justify-end gap-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-          <span class="text-xs text-gray-400 self-center font-bold mr-2 uppercase tracking-widest">Global State Presets:</span>
+        <div class="fixed bottom-0 left-0 md:left-64 right-0 bg-white border-t border-gray-200 p-3 z-30 flex justify-end gap-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] overflow-x-auto whitespace-nowrap">
+          <span class="text-xs text-gray-400 self-center font-bold mr-2 uppercase tracking-widest hidden sm:inline">Global State Presets:</span>
           <a [routerLink]="[{ outlets: { primary: 'home', left: null, right: null } }]" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold rounded-lg transition-colors cursor-pointer">
             Reset All
           </a>
           <a [routerLink]="[{ outlets: { primary: 'dashboard', left: 'menu', right: 'notes' } }]" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-2">
-            <span>🚀</span> Load Full Dashboard
+            <span>🚀</span> Load Dashboard
           </a>
         </div>
       }
