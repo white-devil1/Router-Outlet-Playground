@@ -123,7 +123,10 @@
       </div>
 
       <!-- 2. VISUAL ADDRESS BAR -->
-      <div class="bg-white border-b border-gray-200 py-3 px-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] z-0">
+      <div class="bg-white border-b border-gray-200 py-3 px-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] z-0 relative transition-all duration-300"
+           [class.ring-4]="tutorial.currentStep().focusArea === 'url' || tutorial.currentStep().focusArea === 'wildcard'"
+           [class.ring-indigo-300]="tutorial.currentStep().focusArea === 'url' || tutorial.currentStep().focusArea === 'wildcard'"
+           [class.z-20]="tutorial.currentStep().focusArea === 'url' || tutorial.currentStep().focusArea === 'wildcard'">
         <div class="max-w-5xl mx-auto flex items-center gap-3">
           <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Browser URL:</span>
           <div class="flex-1 bg-slate-100 border border-gray-200 rounded p-1.5 flex gap-1.5 font-mono text-sm items-center h-10 overflow-x-auto shadow-inner">
@@ -165,7 +168,11 @@
                 <a [routerLink]="[{ outlets: { left: null } }]" class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded text-gray-500 text-xs hover:bg-red-500 hover:text-white cursor-pointer" title="Close">✕</a>
               </div>
             </div>
-            <div class="flex-1 bg-white border-2 border-dashed border-green-300 rounded-xl p-3 relative min-h-[200px] shadow-sm group">
+            <div class="flex-1 bg-white border-2 border-dashed border-green-300 rounded-xl p-3 relative min-h-[200px] shadow-sm group transition-all duration-500"
+                 [class.scale-105]="tutorial.currentStep().focusArea === 'left'"
+                 [class.shadow-xl]="tutorial.currentStep().focusArea === 'left'"
+                 [class.ring-4]="tutorial.currentStep().focusArea === 'left'"
+                 [class.ring-green-200]="tutorial.currentStep().focusArea === 'left'">
               <router-outlet name="left"></router-outlet>
               <div class="absolute inset-0 flex items-center justify-center text-green-50 text-4xl font-black -z-0 pointer-events-none group-hover:text-green-100 transition-colors">LEFT</div>
             </div>
@@ -178,14 +185,22 @@
             
             <div class="flex justify-between items-center mb-2 px-1">
               <span class="text-[10px] font-bold text-blue-700 uppercase bg-blue-100 px-2 py-0.5 rounded border border-blue-200">Primary (Default)</span>
-              <div class="flex gap-2">
+              <div class="flex gap-2 transition-all duration-500"
+                   [class.scale-110]="tutorial.currentStep().focusArea === 'active'"
+                   [class.ring-4]="tutorial.currentStep().focusArea === 'active'"
+                   [class.ring-yellow-300]="tutorial.currentStep().focusArea === 'active'"
+                   [class.rounded-full]="tutorial.currentStep().focusArea === 'active'">
                  <a routerLink="/home" routerLinkActive="bg-blue-600 text-white border-blue-600 shadow-md scale-105" class="px-4 py-1 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 transition-all cursor-pointer">Home</a>
                  <a routerLink="/dashboard" routerLinkActive="bg-indigo-600 text-white border-indigo-600 shadow-md scale-105" class="px-4 py-1 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 transition-all cursor-pointer">Dashboard</a>
                  <a routerLink="/settings" routerLinkActive="bg-purple-600 text-white border-purple-600 shadow-md scale-105" class="px-4 py-1 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 transition-all cursor-pointer">Settings</a>
               </div>
             </div>
 
-            <div class="bg-white border-2 border-dashed border-blue-300 rounded-xl p-6 relative min-h-[350px] shadow-lg flex flex-col justify-between z-10">
+            <div class="bg-white border-2 border-dashed border-blue-300 rounded-xl p-6 relative min-h-[350px] shadow-lg flex flex-col justify-between z-10 transition-all duration-500"
+                 [class.scale-105]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'"
+                 [class.shadow-2xl]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'"
+                 [class.ring-4]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'"
+                 [class.ring-blue-200]="tutorial.currentStep().focusArea === 'primary' || tutorial.currentStep().focusArea === 'intro'">
               <!-- Outlet content goes here -->
               <div class="relative z-10">
                 <router-outlet></router-outlet>
@@ -195,12 +210,18 @@
               <div class="mt-8 pt-4 border-t border-gray-100">
                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center mb-2">Simulation Tools</div>
                  <div class="flex justify-center gap-6">
-                   <div class="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded border border-gray-200">
+                   <div class="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded border border-gray-200 transition-all duration-500"
+                        [class.ring-4]="tutorial.currentStep().focusArea === 'params'"
+                        [class.ring-fuchsia-300]="tutorial.currentStep().focusArea === 'params'"
+                        [class.scale-110]="tutorial.currentStep().focusArea === 'params'">
                      <span class="text-[10px] font-bold text-gray-500">USER ID:</span>
                      <a routerLink="/user/1" routerLinkActive="bg-fuchsia-500 text-white border-transparent" class="w-6 h-6 flex items-center justify-center rounded border border-gray-300 text-[10px] font-bold hover:border-fuchsia-400 cursor-pointer">1</a>
                      <a routerLink="/user/99" routerLinkActive="bg-fuchsia-500 text-white border-transparent" class="w-6 h-6 flex items-center justify-center rounded border border-gray-300 text-[10px] font-bold hover:border-fuchsia-400 cursor-pointer">99</a>
                    </div>
-                   <div class="flex items-center gap-2 bg-red-50 px-3 py-1 rounded border border-red-100">
+                   <div class="flex items-center gap-2 bg-red-50 px-3 py-1 rounded border border-red-100 transition-all duration-500"
+                        [class.ring-4]="tutorial.currentStep().focusArea === 'wildcard'"
+                        [class.ring-red-300]="tutorial.currentStep().focusArea === 'wildcard'"
+                        [class.scale-110]="tutorial.currentStep().focusArea === 'wildcard'">
                      <span class="text-[10px] font-bold text-red-400">TEST 404:</span>
                      <a routerLink="/bad-url" class="px-2 py-0.5 bg-white border border-red-200 rounded text-[10px] text-red-600 font-bold hover:bg-red-600 hover:text-white cursor-pointer">Broken Link</a>
                    </div>
@@ -225,7 +246,11 @@
                 <a [routerLink]="[{ outlets: { right: null } }]" class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded text-gray-500 text-xs hover:bg-red-500 hover:text-white cursor-pointer" title="Close">✕</a>
               </div>
             </div>
-            <div class="flex-1 bg-white border-2 border-dashed border-red-300 rounded-xl p-3 relative min-h-[200px] shadow-sm group">
+            <div class="flex-1 bg-white border-2 border-dashed border-red-300 rounded-xl p-3 relative min-h-[200px] shadow-sm group transition-all duration-500"
+                 [class.scale-105]="tutorial.currentStep().focusArea === 'right'"
+                 [class.shadow-xl]="tutorial.currentStep().focusArea === 'right'"
+                 [class.ring-4]="tutorial.currentStep().focusArea === 'right'"
+                 [class.ring-red-200]="tutorial.currentStep().focusArea === 'right'">
               <router-outlet name="right"></router-outlet>
               <div class="absolute inset-0 flex items-center justify-center text-red-50 text-4xl font-black -z-0 pointer-events-none group-hover:text-red-100 transition-colors">RIGHT</div>
             </div>
