@@ -30,3 +30,4 @@ out-tsc/
 # Vite (Angular 17+ uses Vite)
 .vite/
 
+.github.zip/
