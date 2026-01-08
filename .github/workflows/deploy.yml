@@ -8,10 +8,6 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    
-    # Required to allow the action to push to the gh-pages branch
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository
@@ -23,15 +19,13 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build Angular app
-        # --output-path=dist ensures files go to 'dist' (not dist/project-name), matching publish_dir below
-        run: npx ng build --configuration production --base-href=/angular-routemaster/ --output-path=dist
+        run: npx ng build --configuration production --base-href=/angular-routemaster/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist
-          force_orphan: true
