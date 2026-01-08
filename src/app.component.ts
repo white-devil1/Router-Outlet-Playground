@@ -7,12 +7,13 @@ import { LanguageService } from './services/language.service';
 import { QuizService } from './services/quiz.service';
 import { InterviewService } from './services/interview.service';
 import { LandingPageComponent } from './components/landing.component';
+import { AngularLogoComponent } from './components/svg/angular-logo.component';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, LandingPageComponent, TitleCasePipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, LandingPageComponent, TitleCasePipe, AngularLogoComponent],
   templateUrl: './app.component.html',
   styles: [`
     @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -22,6 +23,18 @@ import { filter } from 'rxjs/operators';
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+    /* THEME: Flowing Water (Space/Dark) */
+    .landing-bg-flow {
+      background-image: linear-gradient(to right, #020617, #2e1065, #1e1b4b, #020617);
+      background-size: 200% auto;
+      animation: gradientFlow 15s ease-in-out infinite;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
   `]
 })
 export class AppComponent {

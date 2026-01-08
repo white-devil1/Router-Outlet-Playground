@@ -10,26 +10,28 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, TitleCasePipe],
   template: `
-    <div class="h-full bg-slate-50 p-6 overflow-y-auto flex flex-col items-center">
+    <!-- Transparent BG for Theme Flow -->
+    <div class="h-full bg-transparent p-6 overflow-y-auto flex flex-col items-center">
       
       <!-- HEADER & LIST QUESTIONS -->
       <div class="max-w-3xl w-full animate-slide-up">
         
         <div class="flex items-center gap-4 mb-8">
-          <button (click)="goHome()" class="p-2 hover:bg-slate-200 rounded-full transition-colors" title="Exit">
+          <button (click)="goHome()" class="p-2 hover:bg-white/10 rounded-full transition-colors text-white" title="Exit">
             ⬅️
           </button>
           <div>
-            <h1 class="text-2xl font-black text-slate-800">
-              <span class="text-indigo-600">{{ currentLevel() | titlecase }}</span> Interview Q&A
+            <h1 class="text-2xl font-black text-white">
+              <span class="text-indigo-400">{{ currentLevel() | titlecase }}</span> Interview Q&A
             </h1>
-            <p class="text-sm text-slate-500">{{ filteredQuestions().length }} Questions available for this level</p>
+            <p class="text-sm text-slate-400">{{ filteredQuestions().length }} Questions available for this level</p>
           </div>
         </div>
 
         <div class="space-y-4 pb-20">
           @for(q of filteredQuestions(); track q.id) {
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-md">
+            <!-- WHITE CARD for Contrast -->
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden transition-all hover:shadow-2xl hover:scale-[1.01]">
               <button (click)="service.toggle(q.id)" 
                       class="w-full text-left px-6 py-5 flex justify-between items-start focus:outline-none">
                 <span class="font-bold text-slate-800 pr-4 leading-relaxed">{{q.question}}</span>

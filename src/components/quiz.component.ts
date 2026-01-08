@@ -10,24 +10,21 @@ import { TutorialService } from '../services/tutorial.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="h-full flex flex-col bg-slate-50 relative overflow-hidden font-sans">
+    <!-- MAIN WRAPPER: Transparent to let global flow theme show through -->
+    <div class="h-full flex flex-col bg-transparent relative overflow-hidden font-sans">
       
-      <!-- BACKGROUND DECORATION -->
-      <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-100 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
-      <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2"></div>
-
-      <!-- HEADER -->
-      <div class="relative z-10 bg-white border-b border-gray-200 p-4 flex justify-between items-center shadow-sm">
-        <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
+      <!-- HEADER (Glass) -->
+      <div class="relative z-10 bg-slate-900/30 backdrop-blur-md border-b border-white/10 p-4 flex justify-between items-center shadow-lg">
+        <h2 class="text-xl font-black text-white flex items-center gap-2">
           <span>🧠</span> Routing Quiz
-          <span class="px-2 py-1 rounded bg-slate-100 text-slate-500 text-xs font-normal uppercase tracking-wider">
+          <span class="px-2 py-1 rounded bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-normal uppercase tracking-wider">
             {{ tutorial.currentLevel() }}
           </span>
         </h2>
         @if(quiz.quizState() === 'active') {
           <div class="flex items-center gap-4">
-             <div class="text-sm font-bold text-slate-500">Score: <span class="text-indigo-600 text-lg">{{quiz.score()}}</span></div>
-             <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+             <div class="text-sm font-bold text-slate-400">Score: <span class="text-indigo-400 text-lg">{{quiz.score()}}</span></div>
+             <div class="w-32 h-2 bg-slate-800 rounded-full overflow-hidden">
                <div class="h-full bg-indigo-500 transition-all duration-500" [style.width.%]="quiz.progress()"></div>
              </div>
           </div>
@@ -39,10 +36,11 @@ import { TutorialService } from '../services/tutorial.service';
         
         <!-- STATE: ACTIVE QUESTION -->
         @if(quiz.quizState() === 'active' && quiz.currentQuestion(); as q) {
-          <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col animate-slide-up">
+          <!-- WHITE CARD for Contrast -->
+          <div class="max-w-3xl w-full bg-white rounded-2xl shadow-2xl border border-slate-300 overflow-hidden flex flex-col animate-slide-up">
             
             <!-- Question Text -->
-            <div class="p-8 bg-slate-50 border-b border-slate-100">
+            <div class="p-8 bg-slate-50 border-b border-slate-200">
                <div class="flex justify-between mb-4">
                  <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wide">
                    Question {{quiz.currentQuestionIndex() + 1}}
@@ -62,7 +60,7 @@ import { TutorialService } from '../services/tutorial.service';
             </div>
 
             <!-- Input Area -->
-            <div class="p-8">
+            <div class="p-8 bg-white text-slate-800">
               @if(!quiz.showExplanation()) {
                 
                 <!-- MCQ -->
@@ -83,7 +81,7 @@ import { TutorialService } from '../services/tutorial.service';
                     <input #txtInput type="text" 
                            (keydown.enter)="submit(txtInput.value)"
                            placeholder="Type your answer here..." 
-                           class="flex-1 p-4 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none text-lg font-medium">
+                           class="flex-1 p-4 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none text-lg font-medium bg-slate-50 text-slate-900">
                     <button (click)="submit(txtInput.value)" class="px-6 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg">Submit</button>
                   </div>
                 }
@@ -110,7 +108,7 @@ import { TutorialService } from '../services/tutorial.service';
                     {{ quiz.isCorrect() ? 'Correct!' : 'Incorrect' }}
                   </h3>
                   
-                  <div class="bg-slate-50 p-6 rounded-xl text-left border border-slate-200 mb-8 shadow-sm">
+                  <div class="bg-slate-50 p-6 rounded-xl text-left border border-slate-200 mb-8 shadow-sm text-slate-700">
                     <p class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-2">Explanation:</p>
                     <p class="text-slate-700 leading-relaxed">{{q.explanation}}</p>
                     @if(!quiz.isCorrect()) {
@@ -191,11 +189,9 @@ export class QuizComponent implements OnInit {
   router = inject(Router);
 
   ngOnInit() {
-    // Automatically start quiz for the currently selected tutorial level
     this.retry();
   }
 
-  // Safe helper to format text
   formatQuestionText(q: QuizQuestion): string {
     if (q.type === 'fill-blank' && q.question) {
       return q.question.replace('[?]', '____');
