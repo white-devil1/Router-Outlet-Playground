@@ -46,7 +46,8 @@ import { Router } from '@angular/router';
               @if(q.isOpen) {
                 <div class="px-6 pb-6 pt-0 animate-slide-down">
                   <div class="p-4 bg-slate-50 border-l-4 border-indigo-400 rounded-r-lg text-slate-700 leading-relaxed text-sm">
-                    {{q.answer}}
+                    <!-- CHANGED: [innerHTML] to support code blocks and bolding -->
+                    <div [innerHTML]="q.answer"></div>
                   </div>
                 </div>
               }

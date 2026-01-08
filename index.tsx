@@ -44,7 +44,7 @@ const routes: Routes = [
 bootstrapApplication(AppComponent, {
   providers: [
     provideZonelessChangeDetection(),
-    provideRouter(routes)
+    provideRouter(routes, withHashLocation())
   ]
 }).catch(err => console.error(err));
 
