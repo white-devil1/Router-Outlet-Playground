@@ -1,8 +1,9 @@
+
 import '@angular/compiler';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './src/app.component';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter, withHashLocation, Routes } from '@angular/router';
+import { provideRouter, Routes, withHashLocation } from '@angular/router';
 
 // 1. Primary Page Components
 import { HomePageComponent, DashboardPageComponent, SettingsPageComponent, UserPageComponent, NotFoundComponent } from './src/components/pages.component';
