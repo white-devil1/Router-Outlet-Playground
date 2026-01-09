@@ -1,9 +1,9 @@
-// Test code disabled due to missing Jasmine types in this environment.
-/*
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LandingPageComponent } from './landing.component';
 import { LanguageService } from '../services/language.service';
 import { TutorialService } from '../services/tutorial.service';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('LandingPageComponent', () => {
   let component: LandingPageComponent;
@@ -39,9 +39,9 @@ describe('LandingPageComponent', () => {
   });
 
   it('should emit start event and update services on start', () => {
-    spyOn(component.start, 'emit');
-    spyOn(langService, 'setLanguage');
-    spyOn(tutorialService, 'setLevel');
+    vi.spyOn(component.start, 'emit');
+    vi.spyOn(langService, 'setLanguage');
+    vi.spyOn(tutorialService, 'setLevel');
 
     // Set some state
     component.selectLang('ml');
@@ -55,4 +55,3 @@ describe('LandingPageComponent', () => {
     expect(component.start.emit).toHaveBeenCalled();
   });
 });
-*/

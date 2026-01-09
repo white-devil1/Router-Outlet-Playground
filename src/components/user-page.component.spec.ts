@@ -1,10 +1,10 @@
-// Test code disabled due to missing Jasmine types in this environment.
-/*
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserPageComponent } from './pages.component'; // Importing from pages.component file
+import { UserPageComponent } from './pages.component';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { convertToParamMap } from '@angular/router';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('UserPageComponent', () => {
   let component: UserPageComponent;
@@ -30,7 +30,6 @@ describe('UserPageComponent', () => {
   });
 
   it('should read the ID parameter from URL', () => {
-    // The signal should have picked up '123' from the mock
     expect(component.userId()).toBe('123');
   });
 
@@ -39,4 +38,3 @@ describe('UserPageComponent', () => {
     expect(compiled.textContent).toContain('123');
   });
 });
-*/
